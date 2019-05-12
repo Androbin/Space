@@ -12,5 +12,8 @@ public interface Space<T> {
   
   void remove( T object, Rectangle window );
   
-  void set( T object, Rectangle window, Rectangle bounds );
+  default void set( final T object, final Rectangle window, final Rectangle bounds ) {
+    remove( object, window );
+    add( object, bounds );
+  };
 }

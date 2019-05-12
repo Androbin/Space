@@ -103,15 +103,6 @@ public final class RTree<T> implements Space<T> {
     }
   }
   
-  @ Override
-  public void set( final T object, final Rectangle window, final Rectangle bounds ) {
-    if ( root == null ) {
-      return;
-    }
-    
-    root.set( object, window, bounds );
-  }
-  
   private static interface Node<T> {
     boolean delete( T object, Rectangle window, int min, List<Node<T>> deleted );
     
@@ -122,8 +113,6 @@ public final class RTree<T> implements Space<T> {
     int level();
     
     Rectangle mbr();
-    
-    boolean set( T object, Rectangle window, Rectangle bounds );
   }
   
   private static final class InnerNode<T> implements Node<T> {
@@ -278,25 +267,7 @@ public final class RTree<T> implements Space<T> {
     @ Override
     public Rectangle mbr() {
       return mbr;
-    }
-    
-    @ Override
-    public boolean set( final T object, final Rectangle window, final Rectangle bounds ) {
-      if ( !mbr.contains( window ) ) {
-        return false;
-      }
-      
-      for ( final Node<T> child : children ) {
-        if ( !child.set( object, window, bounds ) ) {
-          continue;
-        }
-        
-        mbr = RTree.mbr( children );
-        return true;
-      }
-      
-      return false;
-    }
+    }   
   }
   
   private static final class LeafNode<T> implements Node<T> {
@@ -334,16 +305,6 @@ public final class RTree<T> implements Space<T> {
     @ Override
     public Rectangle mbr() {
       return bounds;
-    }
-    
-    @ Override
-    public boolean set( final T object, final Rectangle window, final Rectangle bounds ) {
-      if ( !this.object.equals( object ) || !this.bounds.contains( window ) ) {
-        return false;
-      }
-      
-      this.bounds = bounds;
-      return true;
     }
   }
 }
