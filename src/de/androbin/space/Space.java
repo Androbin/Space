@@ -1,14 +1,21 @@
 package de.androbin.space;
 
 import java.awt.*;
+import java.util.function.*;
 import java.util.stream.*;
 
 public interface Space<T> {
   void add( T object, Rectangle bounds );
   
-  Stream<T> filter( Rectangle window );
+  Stream<T> filter( Predicate<Rectangle> test );
   
-  Stream<T> filter( Point pos );
+  default Stream<T> filter( final Rectangle window ) {
+    return filter( bounds -> bounds.intersects( window ) );
+  }
+  
+  default Stream<T> filter( final Point pos ) {
+    return filter( bounds -> bounds.contains( pos ) );
+  }
   
   void remove( T object, Rectangle window );
   
@@ -16,4 +23,8 @@ public interface Space<T> {
     remove( object, window );
     add( object, bounds );
   };
+  
+  default Stream<T> stream() {
+    return filter( key -> true );
+  }
 }

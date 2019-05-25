@@ -33,7 +33,8 @@ public final class RTree<T> implements Space<T> {
     return rect.width + rect.height;
   }
   
-  private Stream<T> filter( final Predicate<Rectangle> test ) {
+  @ Override
+  public Stream<T> filter( final Predicate<Rectangle> test ) {
     if ( root == null ) {
       return Stream.empty();
     }
@@ -41,16 +42,6 @@ public final class RTree<T> implements Space<T> {
     final Stream.Builder<T> builder = Stream.builder();
     root.filter( test, builder );
     return builder.build();
-  }
-  
-  @ Override
-  public Stream<T> filter( final Rectangle window ) {
-    return filter( key -> key.intersects( window ) );
-  }
-  
-  @ Override
-  public Stream<T> filter( final Point pos ) {
-    return filter( key -> key.contains( pos ) );
   }
   
   private void insert( final Node<T> node ) {
@@ -267,7 +258,7 @@ public final class RTree<T> implements Space<T> {
     @ Override
     public Rectangle mbr() {
       return mbr;
-    }   
+    }
   }
   
   private static final class LeafNode<T> implements Node<T> {

@@ -15,20 +15,11 @@ public final class SpatialList<T> implements Space<T> {
     map.add( new Pair<>( object, bounds ) );
   }
   
-  private Stream<T> filter( final Predicate<Rectangle> test ) {
+  @ Override
+  public Stream<T> filter( final Predicate<Rectangle> test ) {
     return map.stream()
         .filter( pair -> test.test( pair.second ) )
         .map( pair -> pair.first );
-  }
-  
-  @ Override
-  public Stream<T> filter( final Rectangle window ) {
-    return filter( bounds -> bounds.intersects( window ) );
-  }
-  
-  @ Override
-  public Stream<T> filter( final Point pos ) {
-    return filter( bounds -> bounds.contains( pos ) );
   }
   
   @ Override
